@@ -20,13 +20,12 @@ cleaned_data <-
   raw_data |>
   clean_names() %>%
   mutate(
-    occ_date = ymd(occ_date),  # Convert occ_data to date format
+    occ_date = ymd(occ_date),  # Convert occ_date to date format
     division = as.factor(division),  # Convert police division to factor
     death = as.integer(death),  # Ensure death count is integer
-    injuries = as.integer(injuries),  # Ensure injuries count is integer
-    long_wgs84 = as.numeric(long_wgs84),  # Ensure longitude is numeric
-    lat_wgs84 = as.numeric(lat_wgs84)  # Ensure latitude is numeric
+    injuries = as.integer(injuries)  # Ensure injuries count is integer
   ) %>%
+  select(-hood_140, -neighbourhood_140, -long_wgs84, -lat_wgs84, -geometry) %>%
   drop_na()  # Optional: Drop rows with any NA values
 
 #### Save data ####
