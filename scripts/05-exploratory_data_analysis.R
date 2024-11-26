@@ -78,13 +78,13 @@ ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
 #### Model data ####
 # Predicting the weighted score based on various factors
 score_model <- stan_glm(
-  formula = weighted_score ~ occ_hour + occ_doy + neighbourhood_158,
+  formula = weighted_score ~ occ_date + occ_doy + occ_hour + neighbourhood_158 + division,
   data = analysis_data,
-  family = gaussian(),  # Depending on the distribution of weighted_score, consider other families
+  family = gaussian(),
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
   prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
   seed = 853
 )
 
 #### Save model ####
-saveRDS(score_model, file = "models/score_model.rds")
+saveRDS(score_model, file = "models/first_model.rds")
