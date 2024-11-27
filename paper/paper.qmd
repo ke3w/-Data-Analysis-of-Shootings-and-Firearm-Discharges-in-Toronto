@@ -1,13 +1,12 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "Analysis of Shootings and Firearm Discharges in Toronto"
+subtitle: "A Comprehensive Examination Reveals Significant Time and Locational Impacts on Incident Severity"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: [https://github.com/RohanAlexander/starter_folder](https://github.com/RohanAlexander/starter_folder)."
-date: today
+  - Xinze Wu
+thanks: "Code and data are available at: https://github.com/ke3w/Data-Analysis-of-Shootings-and-Firearm-Discharges-in-Toronto."
+date: 2024/11/26
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto. Utilizing a Bayesian generalized linear model, significant variations across neighborhoods and time ranges are revealed, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives."
 format: pdf
 number-sections: true
 bibliography: references.bib

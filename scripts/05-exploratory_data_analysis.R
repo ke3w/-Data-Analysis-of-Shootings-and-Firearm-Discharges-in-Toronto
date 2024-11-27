@@ -36,6 +36,9 @@ analysis_data$division <- factor(analysis_data$division, levels = reorder_factor
 analysis_data$occ_time_range <- factor(analysis_data$occ_time_range, levels = reorder_factors(analysis_data, occ_time_range))
 analysis_data$neighbourhood_158 <- factor(analysis_data$neighbourhood_158, levels = reorder_factors(analysis_data, neighbourhood_158))
 
+# Convert 'occ_hour' to numeric
+analysis_data$occ_hour <- as.numeric(as.character(analysis_data$occ_hour))
+
 #### Plotting ####
 
 # Relationships by Date
@@ -78,7 +81,7 @@ ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
 #### Model data ####
 # Predicting the weighted score based on various factors
 score_model <- stan_glm(
-  formula = weighted_score ~ occ_date + occ_doy + occ_hour + neighbourhood_158 + division,
+  formula = weighted_score ~ occ_date + occ_doy + occ_time_range + neighbourhood_158 + division,
   data = analysis_data,
   family = gaussian(), 
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
@@ -86,5 +89,7 @@ score_model <- stan_glm(
   seed = 853
 )
 
-#### Save model ####
-saveRDS(score_model, file = "models/first_model.rds")
+summary(score_model)
+
+# Save model
+saveRDS(model_validation_train, file = "models/fisrt_model.rds")
