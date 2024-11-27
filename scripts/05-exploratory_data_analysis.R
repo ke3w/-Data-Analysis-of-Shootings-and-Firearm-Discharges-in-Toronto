@@ -80,7 +80,7 @@ ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
 score_model <- stan_glm(
   formula = weighted_score ~ occ_date + occ_doy + occ_hour + neighbourhood_158 + division,
   data = analysis_data,
-  family = gaussian(),
+  family = gaussian(), 
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
   prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
   seed = 853
