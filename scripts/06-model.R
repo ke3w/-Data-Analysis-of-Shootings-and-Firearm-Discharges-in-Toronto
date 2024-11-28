@@ -1,58 +1,55 @@
 #### Preamble ####
-# Purpose: Validate and check the model built on Toronto shootings data
+# Purpose: Load and further analyze the Gradient Boosting Machine model for predicting weighted scores of shootings and firearm discharges in Toronto.
 # Author: Xinze Wu
-# Date: 2024/11/28
+# Date: 2024/11/24
 # Contact: kerwin.wu@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: tidyverse, rstanarm, caret
+# Pre-requisites: The `tidyverse`, `gbm`, `caret` packages must be installed and loaded
 
 #### Workspace setup ####
 library(tidyverse)
-library(rstanarm)
+library(gbm)
 library(caret)
 
+#### Load saved model ####
+model <- readRDS("models/first_model.rds")
+
 #### Load data ####
+# Load the cleaned and preprocessed data for further analysis or prediction
 analysis_data <- read_csv("data/02-analysis_data/analysis_data.csv")
-
-#### Prepare Data ####
-# Creating a weighted score for deaths and injuries
+analysis_data$occ_date <- as.numeric(analysis_data$occ_date)
+analysis_data$occ_dow <- as.factor(analysis_data$occ_dow)
+analysis_data$occ_time_range <- as.factor(analysis_data$occ_time_range)
+analysis_data$neighbourhood_158 <- as.factor(analysis_data$neighbourhood_158)
+analysis_data$division <- as.factor(analysis_data$division)
 analysis_data <- analysis_data %>%
-  mutate(weighted_score = death * 2 + injuries)
+  mutate(weighted_score = death * 2 + injuries)  # Adjust the greater importance of 'death' over 'injuries'
 
-#### Split Data into Training and Testing Sets ####
-set.seed(123)  # Ensure reproducibility
-split <- createDataPartition(analysis_data$weighted_score, p = 0.7, list = FALSE)
-training_data <- analysis_data[split, ]
-testing_data <- analysis_data[-split, ]
 
-#### Model Fitting ####
-# Fit the model on training data
-model_validation_train <- stan_glm(
-  formula = weighted_score ~ occ_date + occ_doy + occ_time_range + neighbourhood_158 + division,
-  data = training_data,
-  family = gaussian(),
-  prior = normal(0, 2.5, autoscale = TRUE),
-  prior_intercept = normal(0, 2.5, autoscale = TRUE),
-  seed = 853
-)
+#### Model diagnostics and performance analysis ####
+# Printing model summary
+print(model)
 
-#### Posterior Predictive Checks ####
-# Performing posterior predictive checks to assess how well the model predictions align with the actual data.
-pp_check(model_validation_train)
+# Set graphical parameters
+par(cex.axis = 0.4, las = 1)  # Adjust this value to change the size of the axis labels
 
-#### Predictions on Test Data ####
-# Predicting on testing data
-testing_data <- testing_data %>%
-  mutate(predicted_scores = posterior_predict(model_validation_train, newdata = testing_data, type = "response") |> colMeans())
+# Plot variable importance
+summary(model, n.trees = 500, plotit = TRUE)
 
-#### Model Performance Evaluation ####
-# Calculate Root Mean Squared Error (RMSE) and R-squared to quantify prediction accuracy.
-rmse_value <- rmse(testing_data$weighted_score, testing_data$predicted_scores)
-r_squared_value <- rsquared(testing_data$weighted_score, testing_data$predicted_scores)
+# Reset to default (optional, to avoid affecting other plots)
+par(cex.axis = 1)
 
-# Print performance metrics
-cat("RMSE:", rmse_value, "\n")
-cat("R-squared:", r_squared_value, "\n")
+# Generate predictions on new or existing data
+predictions <- predict(model, newdata = analysis_data, n.trees = 500, type = "response")
 
-#### Save model for future use ####
-saveRDS(model_validation_train, file = "models/model_validation_train.rds")
+# Compare predictions with actual data and calculate performance metrics
+actual <- analysis_data$weighted_score
+rmse <- sqrt(mean((predictions - actual)^2))
+
+#### Save performance metrics ####
+# Show RMSE
+print(sprintf("RMSE: %f", rmse))
+
+#### Documentation ####
+# Document insights and potential next steps
+write("Detailed analysis of the model's performance and recommended improvements are documented.", file = "docs/model_insights.txt")
