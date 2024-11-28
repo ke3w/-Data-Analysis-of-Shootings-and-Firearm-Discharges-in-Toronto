@@ -46,7 +46,7 @@ predictions <- predict(model, newdata = analysis_data, n.trees = 500, type = "re
 actual <- analysis_data$weighted_score
 rmse <- sqrt(mean((predictions - actual)^2))
 
-#### Save performance metrics ####
+#### performance metrics ####
 # Show RMSE
 print(sprintf("RMSE: %f", rmse))
 
