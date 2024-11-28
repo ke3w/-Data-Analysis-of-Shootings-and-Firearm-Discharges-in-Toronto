@@ -8,8 +8,8 @@
 
 #### Workspace setup ####
 library(tidyverse)
-library(rstanarm)
-library(dplyr)
+library(gbm)
+library(caret)
 library(ggplot2)
 
 #### Read data ####
@@ -30,6 +30,13 @@ ggplot(analysis_data, aes(x = occ_date, y = weighted_score)) +
   labs(title = "Weighted Score Over Time", x = "Date", y = "Weighted Score") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+
+# Relationships by Day of Week
+ggplot(analysis_data, aes(x = occ_dow, y = weighted_score)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Weighted Score by Day of Week", x = "Day of Week", y = "Weighted Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Relationships by Day of Year
 ggplot(analysis_data, aes(x = occ_doy, y = weighted_score)) +
@@ -60,18 +67,25 @@ ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-#### Model data ####
-# Predicting the weighted score based on various factors
-score_model <- stan_glm(
-  formula = weighted_score ~ occ_date + occ_doy + occ_time_range + neighbourhood_158 + division,
-  data = analysis_data,
-  family = gaussian(), 
-  prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-  prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-  seed = 853
-)
+analysis_data$occ_date <- as.numeric(analysis_data$occ_date)
+analysis_data$occ_dow <- as.factor(analysis_data$occ_dow)
+analysis_data$occ_time_range <- as.factor(analysis_data$occ_time_range)
+analysis_data$neighbourhood_158 <- as.factor(analysis_data$neighbourhood_158)
+analysis_data$division <- as.factor(analysis_data$division)
 
-summary(score_model)
+### Model setup
+set.seed(123)  # for reproducibility
+model <- gbm(weighted_score ~ occ_date + occ_dow + occ_doy + occ_time_range + neighbourhood_158 + division,
+                 data = analysis_data,
+                 distribution = "gaussian",
+                 n.trees = 500,
+                 interaction.depth = 4,
+                 shrinkage = 0.01,
+                 cv.folds = 5,
+                 n.minobsinnode = 10)
+
+# Model summary
+print(model)
 
 # Save model
-saveRDS(model_validation_train, file = "models/fisrt_model.rds")
+saveRDS(model, file = "models/first_model.rds")
