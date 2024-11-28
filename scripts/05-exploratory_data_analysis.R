@@ -21,23 +21,6 @@ analysis_data <- analysis_data %>%
   mutate(weighted_score = death * 2 + injuries)  # Adjust the greater importance of 'death' over 'injuries'
 
 #### Exploratory Data Analysis ####
-
-# Prepare a function to reorder factors based on the weighted score
-reorder_factors <- function(data, grouping_var) {
-  data %>%
-    group_by({{ grouping_var }}) %>%
-    summarise(avg_score = mean(weighted_score, na.rm = TRUE)) %>%
-    arrange(avg_score) %>%
-    pull({{ grouping_var }})
-}
-
-# Apply the function to various factors
-analysis_data$division <- factor(analysis_data$division, levels = reorder_factors(analysis_data, division))
-analysis_data$occ_time_range <- factor(analysis_data$occ_time_range, levels = reorder_factors(analysis_data, occ_time_range))
-analysis_data$neighbourhood_158 <- factor(analysis_data$neighbourhood_158, levels = reorder_factors(analysis_data, neighbourhood_158))
-analysis_data$occ_hour <- factor(analysis_data$occ_hour, levels = reorder_factors(analysis_data, occ_hour))
-
-
 #### Plotting ####
 
 # Relationships by Date
@@ -80,7 +63,7 @@ ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
 #### Model data ####
 # Predicting the weighted score based on various factors
 score_model <- stan_glm(
-  formula = weighted_score ~ occ_date + occ_doy + occ_hour + neighbourhood_158 + division,
+  formula = weighted_score ~ occ_date + occ_doy + occ_time_range + neighbourhood_158 + division,
   data = analysis_data,
   family = gaussian(), 
   prior = normal(location = 0, scale = 2.5, autoscale = TRUE),

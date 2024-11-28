@@ -9,7 +9,7 @@
 #### Workspace setup ####
 library(tidyverse)
 library(janitor)
-library(lubridate)  # Ensure lubridate is loaded for date manipulation
+library(lubridate)
 
 #### Clean data ####
 # Load the raw shootings data
@@ -23,7 +23,8 @@ cleaned_data <-
     occ_date = ymd(occ_date),  # Convert occ_date to date format
     division = as.factor(division),  # Convert police division to factor
     death = as.integer(death),  # Ensure death count is integer
-    injuries = as.integer(injuries)  # Ensure injuries count is integer
+    injuries = as.integer(injuries),  # Ensure injuries count is integer
+    occ_dow = as.factor(occ_dow)
   ) %>%
   select(-hood_140, -neighbourhood_140, -long_wgs84, -lat_wgs84, -geometry) %>%
   drop_na()  # Optional: Drop rows with any NA values
