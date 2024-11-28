@@ -24,7 +24,6 @@ cleaned_data <-
     division = as.factor(division),  # Convert police division to factor
     death = as.integer(death),  # Ensure death count is integer
     injuries = as.integer(injuries),  # Ensure injuries count is integer
-    occ_dow = as.factor(occ_dow)
   ) %>%
   select(-hood_140, -neighbourhood_140, -long_wgs84, -lat_wgs84, -geometry) %>%
   drop_na()  # Optional: Drop rows with any NA values
