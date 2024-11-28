@@ -39,9 +39,6 @@ summary(model, n.trees = 500, plotit = TRUE)
 # Reset to default (optional, to avoid affecting other plots)
 par(cex.axis = 1)
 
-# Generate predictions on new or existing data
-predictions <- predict(model, newdata = analysis_data, n.trees = 500, type = "response")
-
 # Compare predictions with actual data and calculate performance metrics
 actual <- analysis_data$weighted_score
 rmse <- sqrt(mean((predictions - actual)^2))
@@ -49,7 +46,3 @@ rmse <- sqrt(mean((predictions - actual)^2))
 #### performance metrics ####
 # Show RMSE
 print(sprintf("RMSE: %f", rmse))
-
-#### Documentation ####
-# Document insights and potential next steps
-write("Detailed analysis of the model's performance and recommended improvements are documented.", file = "docs/model_insights.txt")

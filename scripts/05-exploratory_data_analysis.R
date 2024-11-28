@@ -86,6 +86,7 @@ model <- gbm(weighted_score ~ occ_date + occ_dow + occ_doy + occ_time_range + ne
 
 # Model summary
 print(model)
+summary(model, n.trees = 500, plotit = TRUE)
 
 # Save model
 saveRDS(model, file = "models/first_model.rds")
