@@ -16,6 +16,21 @@ abstract: |
 bibliography: [references.bib]
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(gbm)
+library(caret)
+library(ggplot2)
+
+#### Load saved model ####
+model <- readRDS("models/first_model.rds")
+
+# Load the cleaned and preprocessed data for further analysis or prediction
+analysis_data <- read_csv("../data/02-analysis_data/analysis_data.csv")
+
+```
+
 # Introduction
 
 The safety and security of urban areas are of paramount importance to their residents and governance structures. In Toronto, the occurrence of shootings and firearm discharges poses significant challenges to public safety. Understanding the patterns and determinants of these violent events is crucial for developing effective interventions and policies. This paper employs a Gradient Boosting Machine model to analyze how time-related factors and geographic locations influence the severity of shooting incidents in Toronto.
@@ -44,7 +59,7 @@ Data cleaning was performed using R[@citeR] packages such as `tidyverse` and `lu
 
 ### Outcome Variable
 
--   **Weighted Score**: Combines the number of deaths and injuries, weighting deaths twice as heavily(weighted_score = death \* 2 + injuries).
+-   `Weighted Score`: Combines the number of deaths and injuries, weighting deaths twice as heavily(weighted_score = death \* 2 + injuries).
 
 ### Predictor Variables
 
@@ -244,7 +259,9 @@ The model was configured with the following parameters to control the complexity
 ## Model Performance
 
 ### Variable Importance
+
 The summary function highlighted the relative importance of each predictor shown in @fig-importance. Notably, the neighborhood variable (neighbourhood_158) dominated the model, indicating significant spatial variation in shooting severities across Toronto. The occ_dow and division showed moderate influence, suggesting that day of the week and police division also contribute to variations in incident severity, albeit to a lesser extent.
+
 ```{r}
 #| warning: false
 #| message: false
@@ -259,15 +276,14 @@ par(cex.axis = 0.4, las = 1)  # Adjust this value to change the size of the axis
 # Plot variable importance
 summary(model, n.trees = 500, plotit = TRUE)
 ```
+
 ### Model Performance
+
 The model’s accuracy was assessed using the Root Mean Square Error (RMSE), calculated at 2.173830. This metric quantifies the average magnitude of the model’s prediction errors, providing a measure of predictive accuracy.
 
 ### Result Interpretation
+
 The results underline the critical influence of geographic location (neighbourhood_158) on the severity of shooting incidents, implying that certain areas are systematically associated with higher severity scores. Temporal factors like the day of the week (occ_dow) and specific police divisions also play roles but are less pronounced compared to spatial factors.
-
-# Results
-
-The model highlighted significant predictors and their relative influence on the severity of shootings. `Division` emerged as a particularly influential predictor, indicating that certain areas within Toronto experience distinctly different levels of shooting severity.
 
 # Discussion
 
@@ -281,10 +297,10 @@ While the model provides valuable insights, it also has limitations due to poten
 
 ## Policy Recommendations
 
-Based on the model's findings, policy recommendations are proposed to enhance public safety and optimize police resource allocation.
+Based on the model’s findings, it is recommended that public safety measures and police resources be strategically focused on specific neighborhoods and times identified as high-risk, enhancing targeted interventions and preventive strategies. These efforts should prioritize the areas and periods with the highest weighted scores, potentially reducing the frequency and severity of shootings by aligning law enforcement presence with predicted incident peaks.
 
 # Conclusion
 
-This study provides a comprehensive analysis of the factors affecting the severity of shootings in Toronto, offering actionable insights for policymakers and law enforcement agencies.
+This study offers a detailed examination of the spatial and temporal factors influencing the severity of shootings and firearm discharges in Toronto, employing a robust Gradient Boosting Machine model. The findings highlight the critical role of specific neighborhoods and time periods in the incidence of these violent events, underscoring the potential for targeted interventions. By focusing law enforcement efforts and community resources on high-risk areas and times identified through the analysis, it is possible to significantly mitigate the impact of such incidents on public safety. The actionable insights provided by this study not only serve as a guide for strategic policy formulation and resource allocation but also support the ongoing efforts to enhance the efficacy of public safety measures in urban environments. This approach ensures that policy responses are data-driven and tailored to the unique dynamics of the city, ultimately contributing to a safer community for all residents.
 
 # References
