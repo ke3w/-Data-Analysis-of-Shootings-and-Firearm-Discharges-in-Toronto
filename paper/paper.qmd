@@ -12,7 +12,7 @@ output:
     toc: true
     number_sections: true
 abstract: |
-  This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto, utilizing a Gradient Boosting Machine model. The findings highlight significant variations across different times and locations, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives.
+  This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto, utilizing a Gradient Boosting Machine model. The findings highlight significant variations across different times and locations, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives.The narrative structure of this analysis follows the guidelines provided in "Telling Stories with Data" [@tellingstories].
 bibliography: [references.bib]
 ---
 
@@ -24,10 +24,13 @@ library(caret)
 library(ggplot2)
 
 #### Load saved model ####
-model <- readRDS("models/first_model.rds")
+model <- readRDS("../models/first_model.rds")
 
 # Load the cleaned and preprocessed data for further analysis or prediction
 analysis_data <- read_csv("../data/02-analysis_data/analysis_data.csv")
+
+analysis_data <- analysis_data %>%
+  mutate(weighted_score = death * 2 + injuries)  # Adjust the greater importance of 'death' over 'injuries'
 
 ```
 
@@ -39,21 +42,17 @@ The safety and security of urban areas are of paramount importance to their resi
 
 This study aims to estimate the effect of time (day of week, hour, and time range) and location (neighbourhood and police division) on the severity of shootings and firearm discharges in Toronto, measured by a weighted score combining deaths and injuries.
 
-## Model Setup
-
-We utilize a Gradient Boosting Machine model, chosen for its robustness in handling various types of data and its ability to model complex interactions and nonlinear relationships between predictors and the response variable.
-
 ## Importance of the Study
 
 The results of this study are crucial for informing public safety strategies and police resource allocation in Toronto, aiming to reduce the incidence and severity of violent firearm-related incidents.
 
 # Data {#sec-data}
 
-Data for this study is sourced from Open Data Toronto: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024.
+Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024.
 
 ## Data Cleaning
 
-Data cleaning was performed using R[@citeR] packages such as `tidyverse` and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions.
+Data cleaning was performed using R[@citeR] packages such as `tidyverse`[@tidyverse] and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions.
 
 ## Variables
 
@@ -224,7 +223,9 @@ The visualization provides a clear depiction of how incident severity is distrib
 
 ## Model Description
 
-The analysis employed a Gradient Boosting Machine (GBM) model using the gbm package in R, designed to predict the weighted scores of shootings and firearm discharges in Toronto based on multiple time-related and geographical predictors. The weighted score is a computed metric that assigns double weight to deaths compared to injuries, highlighting the gravity of incidents resulting in fatalities.
+The analysis employed a Gradient Boosting Machine (GBM) model[@gbm] using the `gbm` package in R, designed to predict the weighted scores of shootings and firearm discharges in Toronto based on multiple time-related and geographical predictors and using the `caret` package for advanced modeling techniques [@caret].
+
+The weighted score is a computed metric that assigns double weight to deaths compared to injuries, highlighting the gravity of incidents resulting in fatalities.
 
 ## Model Setup
 
@@ -301,6 +302,10 @@ Based on the model’s findings, it is recommended that public safety measures a
 
 # Conclusion
 
-This study offers a detailed examination of the spatial and temporal factors influencing the severity of shootings and firearm discharges in Toronto, employing a robust Gradient Boosting Machine model. The findings highlight the critical role of specific neighborhoods and time periods in the incidence of these violent events, underscoring the potential for targeted interventions. By focusing law enforcement efforts and community resources on high-risk areas and times identified through the analysis, it is possible to significantly mitigate the impact of such incidents on public safety. The actionable insights provided by this study not only serve as a guide for strategic policy formulation and resource allocation but also support the ongoing efforts to enhance the efficacy of public safety measures in urban environments. This approach ensures that policy responses are data-driven and tailored to the unique dynamics of the city, ultimately contributing to a safer community for all residents.
+This study offers a detailed examination of the spatial and temporal factors influencing the severity of shootings and firearm discharges in Toronto, employing a robust Gradient Boosting Machine model.
+
+The findings highlight the critical role of specific neighborhoods and time periods in the incidence of these violent events, underscoring the potential for targeted interventions. By focusing law enforcement efforts and community resources on high-risk areas and times identified through the analysis, it is possible to significantly mitigate the impact of such incidents on public safety.
+
+The actionable insights provided by this study not only serve as a guide for strategic policy formulation and resource allocation but also support the ongoing efforts to enhance the efficacy of public safety measures in urban environments. This approach ensures that policy responses are data-driven and tailored to the unique dynamics of the city, ultimately contributing to a safer community for all residents.
 
 # References
