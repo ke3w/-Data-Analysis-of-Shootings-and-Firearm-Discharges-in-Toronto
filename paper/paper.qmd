@@ -1,258 +1,290 @@
 ---
 title: "Analysis of Shootings and Firearm Discharges in Toronto"
 subtitle: "A Comprehensive Examination Reveals Significant Time and Locational Impacts on Incident Severity"
-author: 
-  - Xinze Wu
+author:
+  - name: Xinze Wu
+    affiliation: University of Toronto
+    email: kerwin.wu@mail.utoronto.ca
 thanks: "Code and data are available at: https://github.com/ke3w/Data-Analysis-of-Shootings-and-Firearm-Discharges-in-Toronto."
-date: 2024/11/26
-date-format: long
-abstract: "This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto. Utilizing a Bayesian generalized linear model, significant variations across neighborhoods and time ranges are revealed, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives."
-format: pdf
-number-sections: true
-bibliography: references.bib
+date: "2024-11-26"
+output: 
+  pdf_document:
+    toc: true
+    number_sections: true
+abstract: |
+  This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto, utilizing a Gradient Boosting Machine model. The findings highlight significant variations across different times and locations, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives.
+bibliography: [references.bib]
 ---
-
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
-```
-
 
 # Introduction
 
-Overview paragraph
+The safety and security of urban areas are of paramount importance to their residents and governance structures. In Toronto, the occurrence of shootings and firearm discharges poses significant challenges to public safety. Understanding the patterns and determinants of these violent events is crucial for developing effective interventions and policies. This paper employs a Gradient Boosting Machine model to analyze how time-related factors and geographic locations influence the severity of shooting incidents in Toronto.
 
-Estimand paragraph
+## Estimand
 
-Results paragraph
+This study aims to estimate the effect of time (day of week, hour, and time range) and location (neighbourhood and police division) on the severity of shootings and firearm discharges in Toronto, measured by a weighted score combining deaths and injuries.
 
-Why it matters paragraph
+## Model Setup
 
-Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
+We utilize a Gradient Boosting Machine model, chosen for its robustness in handling various types of data and its ability to model complex interactions and nonlinear relationships between predictors and the response variable.
 
+## Importance of the Study
 
-
-
-
+The results of this study are crucial for informing public safety strategies and police resource allocation in Toronto, aiming to reduce the incidence and severity of violent firearm-related incidents.
 
 # Data {#sec-data}
 
-## Overview
+Data for this study is sourced from Open Data Toronto: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024.
 
-We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
+## Data Cleaning
 
-Overview text
+Data cleaning was performed using R[@citeR] packages such as `tidyverse` and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions.
 
-## Measurement
-	
-Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
+## Variables
 
-## Outcome variables
+### Outcome Variable
 
-Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
+-   **Weighted Score**: Combines the number of deaths and injuries, weighting deaths twice as heavily(weighted_score = death \* 2 + injuries).
 
+### Predictor Variables
 
+-   **Time Factors**:
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+-   `occ_date`(date): Date of Offence Occurred
 
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+-   `occ_dow` (day of the week): Day of the Month Offence Occurred
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
+-   `occ_time_range` (morning, afternoon, evening):Time Range of Day Offence Occurred
 
-Talk more about it.
+-   **Location Factors**:
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+-   `neighbourhood_158:`Name of Neighborhood using City of Toronto's new 158 neighborhood structure
+
+-   `division`: Police division where offence occurred
+
+## Data visualization
+
+### Weighted Score Over Time
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
 #| warning: false
 #| message: false
+#| label: fig-date
+#| fig_caption: true
+#| fig-cap: "line graph shows the relationship between weighted score over date"
+#| echo: false
 
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
+ggplot(analysis_data, aes(x = occ_date, y = weighted_score)) +
+  geom_line(group = 1, color = "blue") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  labs(title = "Weighted Score Over Time", x = "Date", y = "Weighted Score") +
   theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 ```
 
-Talk way more about it. 
+This plot @fig-date illustrates the variation in the weighted scores of shootings and firearm discharges in Toronto from 2004 to 2025. The weighted score, which combines the number of deaths and injuries with deaths being given a higher weight, is plotted against the date of incidents. Notably, the plot reveals several significant spikes, indicating periods with higher shooting severity. These peaks might correlate with specific events or changes in local circumstances, warranting further investigation. The majority of the time, however, the weighted scores remain relatively low, suggesting sporadic rather than consistent patterns of high-severity incidents. This visualization highlights the dynamic nature of crime severity over time and underscores the importance of continuous monitoring and analysis to understand the underlying trends and triggers.
 
-## Predictor variables
+### Weighted Score by Day of week
 
-Add graphs, tables and text.
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-dow
+#| fig_caption: true
+#| fig-cap: "Bar chart of the weighted score by the day of week"
+#| echo: false
 
-Use sub-sub-headings for each outcome variable and feel free to combine a few into one if they go together naturally.
+ggplot(analysis_data, aes(x = occ_dow, y = weighted_score)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Weighted Score by Day of Week", x = "Day of Week", y = "Weighted Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The bar chart @fig-dow illustrates the weighted scores of shootings and firearm discharges in Toronto, broken down by day of the week. Notably, the weekend days (Saturday and Sunday) along with Monday, show elevated scores, suggesting a higher incidence of severe incidents during these days. This trend could be attributed to increased social activities and gatherings during the weekend, potentially leading to more conflicts or accidents. Conversely, the mid-week days (Tuesday and Wednesday) exhibit notably lower scores, indicating fewer severe incidents.
+
+### Weighted Score by Day of Year
+
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-doy
+#| fig_caption: true
+#| fig-cap: "line graph of the weighted score by the day of year"
+#| echo: false
+
+ggplot(analysis_data, aes(x = occ_doy, y = weighted_score)) +
+  geom_smooth(method = "loess", colour = "darkgreen") +
+  labs(title = "Weighted Score by Day of Year", x = "Day of Year", y = "Weighted Score")
+
+```
+
+The line graph @fig-doy visualizes the trend of shootings and firearm discharges in Toronto across different days of the year. The plot shows a clear seasonal pattern, with peaks generally occurring around mid-year and towards the end, particularly noticeable in the increase during summer and winter months. This could correlate with seasonal activities and social behaviors such as holidays and outdoor gatherings that might contribute to increased incidents. The valleys observed during early spring and late fall might reflect quieter periods with fewer such gatherings.
+
+### Weighted Score by Hour of Day
+
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-hour
+#| fig_caption: true
+#| fig-cap: "Bar chart shows the weighted score by the hour of day"
+#| echo: false
+
+ggplot(analysis_data, aes(x = occ_hour, y = weighted_score)) +
+  geom_bar(stat = "identity", fill = "red") +
+  labs(title = "Weighted Score by Hour of Day", x = "Hour", y = "Weighted Score")
 
 
+```
 
+The bar graph @fig-hour presents the distribution of shootings and firearm discharges in Toronto by hour. This visualization demonstrates a notable peak in incidents during the very early hours of the day, specifically around midnight, with a dramatic decline shortly after. A secondary, but less intense, peak occurs in the evening hours, spanning from 8 PM to midnight.
 
+This pattern suggests that incidents tend to happen more frequently during late-night hours, possibly linked to social and recreational activities during these times, or reduced visibility and police presence making these hours more conducive to criminal behavior. Conversely, the hours from early morning to mid-afternoon show markedly lower incidents, reflecting perhaps quieter public activity and higher visibility and vigilance during daylight hours.
 
+### Weighted Score by Time Range
 
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-range
+#| fig_caption: true
+#| fig-cap: "Bar chart shows the weighted score by the time range"
+#| echo: false
 
+ggplot(analysis_data, aes(x = occ_time_range, y = weighted_score, fill = occ_time_range)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Weighted Score by Time Range", x = "Time Range", y = "Weighted Score")
 
-# Model
+```
 
-The goal of our modelling strategy is twofold. Firstly,...
+This bar graph @fig-range illustrates the severity of shootings and firearm discharges in Toronto across different time range of the day. The time ranges are categorized into morning, afternoon, evening, and night.
 
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+The graph reveals a stark increase in incident severity during the night, which towers over the scores recorded for other times of the day. This is followed by the evening, which also shows a considerably high level of incident severity. The overall trend of this graph is highly corresponding to the bar chart of weighted score over hour of the day, basically, this graph provides a more straightforward relationship between the weight score over different periods in a day.
 
-## Model set-up
+### Weighted Score by Neighborhood
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-neighborhood
+#| fig_caption: true
+#| fig-cap: "Bar chart shows the weighted score by the neighborhood"
+#| echo: false
 
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
+ggplot(analysis_data, aes(x = neighbourhood_158, y = weighted_score, fill = neighbourhood_158)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Weighted Score by Neighbourhood", x = "Neighbourhood", y = "Weighted Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank())
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
+```
 
+The bar chart @fig-neighborhood displays the severity of shootings and firearm discharges across various neighborhoods in Toronto, segmented by the neighbourhood_158 identifiers. Each bar represents a different neighbourhood, color-coded for visual differentiation and labeled with both the neighbourhood name and a unique identifier number.
 
-### Model justification
+This visualization highlights the disparity in incident severity across the city, with some neighbourhoods experiencing significantly higher weighted scores than others. Notably, certain areas show peaks which suggest hotspots of violent incidents. Such patterns are crucial for identifying regions that may require more focused law enforcement and public health interventions to mitigate the impact of firearm-related violence.
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
+### Weighted Score by Division
 
-We can use maths by including latex between dollar signs, for instance $\theta$.
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-division
+#| fig_caption: true
+#| fig-cap: "Bar chart shows the weighted score by division"
+#| echo: false
 
+ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Weighted Score by Division", x = "Division", y = "Weighted Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+This bar chart @fig-division illustrates the variation in the severity of shootings and firearm discharges across different police divisions in Toronto. Each division is represented by a unique color and labeled with its respective code (D11 through D55), which simplifies identification and comparison across the chart.
+
+The visualization provides a clear depiction of how incident severity is distributed across the police divisions, with some divisions showing considerably higher weighted scores than others.
+
+# Model Details {#sec-model-details}
+
+## Model Description
+
+The analysis employed a Gradient Boosting Machine (GBM) model using the gbm package in R, designed to predict the weighted scores of shootings and firearm discharges in Toronto based on multiple time-related and geographical predictors. The weighted score is a computed metric that assigns double weight to deaths compared to injuries, highlighting the gravity of incidents resulting in fatalities.
+
+## Model Setup
+
+### Response and Predictor variables
+
+The response variable, weighted_score, combines the effects of deaths and injuries, assigning greater importance to the former. Predictors included:
+
+-   `occ_date`: Numeric representation of the incident date.
+
+-   `occ_dow`: Factor variable indicating the day of the week.
+
+-   `occ_doy`: Numeric day of the year to capture seasonal effects.
+
+-   `occ_time_range`: Categorical variable divided into morning, afternoon, evening, and night.
+
+-   `neighbourhood_158`: Factor variable representing different neighborhoods.
+
+-   `division`: Factor variable representing police divisions.
+
+### Model Configuration
+
+The model was configured with the following parameters to control the complexity and fit of the model:
+
+• Number of Trees: 500, providing sufficient model complexity and accuracy.
+
+• Interaction Depth: 4, allowing interactions among up to four predictors.
+
+• Shrinkage: 0.01, controlling the learning rate to avoid overfitting.
+
+• Cross-validation Folds: 5, used to validate the model internally and optimize parameter selection.
+
+## Model Performance
+
+### Variable Importance
+The summary function highlighted the relative importance of each predictor shown in @fig-importance. Notably, the neighborhood variable (neighbourhood_158) dominated the model, indicating significant spatial variation in shooting severities across Toronto. The occ_dow and division showed moderate influence, suggesting that day of the week and police division also contribute to variations in incident severity, albeit to a lesser extent.
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-importance
+#| fig_caption: true
+#| fig-cap: "Bar chart shows the importance of the predictor variables"
+#| echo: false
+
+# Set graphical parameters
+par(cex.axis = 0.4, las = 1)  # Adjust this value to change the size of the axis labels
+
+# Plot variable importance
+summary(model, n.trees = 500, plotit = TRUE)
+```
+### Model Performance
+The model’s accuracy was assessed using the Root Mean Square Error (RMSE), calculated at 2.173830. This metric quantifies the average magnitude of the model’s prediction errors, providing a measure of predictive accuracy.
+
+### Result Interpretation
+The results underline the critical influence of geographic location (neighbourhood_158) on the severity of shooting incidents, implying that certain areas are systematically associated with higher severity scores. Temporal factors like the day of the week (occ_dow) and specific police divisions also play roles but are less pronounced compared to spatial factors.
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
-```
-
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
-```
-
-
-
+The model highlighted significant predictors and their relative influence on the severity of shootings. `Division` emerged as a particularly influential predictor, indicating that certain areas within Toronto experience distinctly different levels of shooting severity.
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Implications
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+Findings from this model underscore the need for targeted interventions in specific neighbourhoods and at times where shootings are most severe.
 
-## Second discussion point
+## Limitations and Future Research
 
-Please don't use these as sub-heading labels - change them to be what your point actually is.
+While the model provides valuable insights, it also has limitations due to potential unobserved confounders. Future research should consider additional data sources and alternative modeling approaches.
 
-## Third discussion point
+## Policy Recommendations
 
-## Weaknesses and next steps
+Based on the model's findings, policy recommendations are proposed to enhance public safety and optimize police resource allocation.
 
-Weaknesses and next steps should also be included.
+# Conclusion
 
-\newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
-
-
-\newpage
-
+This study provides a comprehensive analysis of the factors affecting the severity of shootings in Toronto, offering actionable insights for policymakers and law enforcement agencies.
 
 # References
-
-
