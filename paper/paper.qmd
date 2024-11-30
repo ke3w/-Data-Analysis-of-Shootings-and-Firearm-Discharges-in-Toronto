@@ -5,15 +5,13 @@ author:
   - name: Xinze Wu
     affiliation: University of Toronto
     email: kerwin.wu@mail.utoronto.ca
-thanks: "Code and data are available at: https://github.com/ke3w/Data-Analysis-of-Shootings-and-Firearm-Discharges-in-Toronto."
-date: "2024-11-26"
-output: 
-  pdf_document:
-    toc: true
-    number_sections: true
-abstract: |
-  This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto, utilizing a Gradient Boosting Machine model. The findings highlight significant variations across different times and locations, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives.The narrative structure of this analysis follows the guidelines provided in "Telling Stories with Data" [@tellingstories].
-bibliography: [references.bib]
+thanks: "Code and data are available at: https://github.com/ke3w/Prediction_US_presidential_election.git"
+date: today
+date-format: long
+abstract: "This paper analyzes the impact of time and location on the severity of shootings and firearm discharges in Toronto, utilizing a Gradient Boosting Machine model. The findings highlight significant variations across different times and locations, emphasizing the need for targeted policy interventions. This study not only aids in understanding the dynamics of urban violence but also assists in resource allocation for law enforcement and public safety initiatives.The narrative structure of this analysis follows the guidelines provided in 'Telling Stories with Data' [@tellingstories]."
+format: pdf
+number-sections: true
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
