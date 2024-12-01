@@ -331,44 +331,44 @@ The actionable insights provided by this study not only serve as a guide for str
 
 # Appendix:
 
-## Appendix: Advanced Methodologies for Sampling and Observational Data Analysis
+## Survey and Sampling Methodology
 
-## A1. Survey and Sampling Methodology
-
-### A1.1 Overview
+### Overview
 
 This study utilizes data sourced from Open Data Toronto(@OpenDataToronto), focusing on shootings and firearm discharges recorded within city limits from 2004 to 2024. Given the observational nature of the dataset, this appendix explores the methodology behind data collection, focusing on how incidents are reported and recorded, ensuring reliability and comprehensiveness of the data utilized for this analysis.
 
-### A1.2 Data Collection Method
+### Data Collection Method
 
 The data collection method hinges on reports from multiple sources including police reports, hospital emergency data, and public reports. This multi-source approach helps in cross-validating the data to minimize reporting biases and errors inherent in single-source data collection. The Toronto Police Service ensures that each reported incident is followed up for additional details and context, which enhances the data’s accuracy.
 
-### A1.3 Sampling Method
+### Sampling Method
 
 While the nature of the data is not based on sampling, the comprehensiveness of data collection over a long period allows for an observational study of trends over time and across different neighborhoods. This approach mimics a census of all shooting incidents within the specified timeframe and geographical bounds, providing a detailed picture of the public safety landscape across the city.
 
-## A2. Addressing Biases and Limitations
+## Addressing Biases and Limitations
 
-### A2.1 Observational Bias
+### Observational Bias
 
 Observational bias is addressed through the systematic recording of data points across all reported incidents, supplemented by stringent data verification protocols employed by the police. Data entries are standardized based on specific criteria such as incident severity, location, time, and involved parties, which are uniformly applied across all cases.
 
-### A2.2 Limitations of Observational Data
+### Limitations of Observational Data
 
 While observational data provides extensive coverage, it inherently lacks the controlled setup of experimental designs, which can introduce external variability and confounding factors. This limitation is partly mitigated through advanced statistical methods such as multivariate regression models that account for potential confounders and interaction effects among variables.
 
-## A3. Advanced Analytical Techniques
+## Advanced Analytical Techniques
 
-### A3.1 Model Specification
+### Model Specification
 
 To understand the impact of time and location on shooting severity, a Gradient Boosting Machine (GBM) model(@gbm) is employed. This section details the model’s specifications, including the handling of categorical and continuous variables, interaction terms, and the rationale behind choosing GBM over other potential models.
 
-### A3.2 Sensitivity Analysis
+### Sensitivity Analysis
 
 A sensitivity analysis is conducted to test the robustness of the model’s findings against changes in model assumptions and configurations. This analysis helps in identifying the stability of the observed effects under various scenarios and model specifications.
 
-### A3.3 Simulation Studies
+### Simulation Studies
 
 Simulation studies complement the observational data analysis by testing theoretical scenarios and their probable outcomes. These simulations help in understanding potential trends in shooting incidents under different policy implementations or changes in socio-economic factors across neighborhoods.
+
+\newpage
 
 # References
