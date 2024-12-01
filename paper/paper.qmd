@@ -289,15 +289,37 @@ The results underline the critical influence of geographic location (neighbourho
 
 ## Implications
 
-Findings from this model underscore the need for targeted interventions in specific neighbourhoods and at times where shootings are most severe.
+The findings from this study highlight the importance of targeted interventions in specific neighborhoods and at specific days in a week to effectively manage and mitigate the severity of shootings in Toronto. The model’s ability to pinpoint high-risk areas and times can significantly aid in deploying resources more efficiently, thereby enhancing the effectiveness of public safety measures.
 
 ## Limitations and Future Research
 
-While the model provides valuable insights, it also has limitations due to potential unobserved confounders. Future research should consider additional data sources and alternative modeling approaches.
+While the insights provided by the Gradient Boosting Machine model are invaluable, they come with inherent limitations associated with observational studies. One significant concern is the potential presence of unobserved confounders that could affect the interpretations made from the model. Variables such as unrecorded socio-economic factors, the presence of non-reported incidents, or changes in law enforcement practices over time could skew the results.
+
+Further, the model’s dependency on historical data may not fully capture future dynamics or the impact of recent interventions. Therefore, continuous updating and validation of the model with new data are crucial for maintaining its relevance and accuracy.
+
+Future research should aim to integrate more dynamic data sources, such as real-time crime reporting and social media analytics, which may provide more immediate indicators of changes in pattern. Additionally, exploring alternative modeling techniques, such as machine learning algorithms that can adapt over time to changes in patterns, would enhance the robustness of the findings.
 
 ## Policy Recommendations
 
-Based on the model’s findings, it is recommended that public safety measures and police resources be strategically focused on specific neighborhoods and times identified as high-risk, enhancing targeted interventions and preventive strategies. These efforts should prioritize the areas and periods with the highest weighted scores, potentially reducing the frequency and severity of shootings by aligning law enforcement presence with predicted incident peaks.
+Based on the predictive insights of the Gradient Boosting Machine model, specific tactical recommendations can be made to enhance public safety effectively:
+
+1\. Patrol Unit Deployment:
+
+• Increase the frequency of police patrols during late-night hours, especially around midnight to 3 AM, which the model identifies as peak times for shootings. These patrols should be intensified on weekends when the data shows a notable rise in incident severity.
+
+• Deploy additional mobile units in neighborhoods identified as high-risk, such as West Hill, York University Heights and so on. These units can be equipped with quick-response capabilities and should be active primarily during identified peak times.
+
+2\. Community Safety Measures:
+
+• Establish temporary community watch programs in the most affected neighborhoods during identified peak periods. These programs could involve local volunteers working in conjunction with law enforcement to monitor and report suspicious activities.
+
+• Implement lighting improvements and install surveillance cameras in dark alleys and poorly lit streets where incidents are frequent, as per the model’s spatial data analysis. This can help deter potential offenders and make the areas safer for residents at night.
+
+3\. Strategic Safety Initiatives:
+
+• Organize safety workshops and emergency response training for residents of neighborhoods with high incident rates. These workshops can focus on measures to enhance personal and collective safety, such as conflict resolution, emergency first aid, and effective communication with law enforcement.
+
+• Partner with local businesses and community centers to fund and support extended hours of operation, providing safe spaces for youths during late hours. These centers can host activities aligned with community interests, reducing the likelihood of involvement in violence.
 
 # Conclusion
 
@@ -306,5 +328,47 @@ This study offers a detailed examination of the spatial and temporal factors inf
 The findings highlight the critical role of specific neighborhoods and time periods in the incidence of these violent events, underscoring the potential for targeted interventions. By focusing law enforcement efforts and community resources on high-risk areas and times identified through the analysis, it is possible to significantly mitigate the impact of such incidents on public safety.
 
 The actionable insights provided by this study not only serve as a guide for strategic policy formulation and resource allocation but also support the ongoing efforts to enhance the efficacy of public safety measures in urban environments. This approach ensures that policy responses are data-driven and tailored to the unique dynamics of the city, ultimately contributing to a safer community for all residents.
+
+# Appendix:
+
+## Appendix: Advanced Methodologies for Sampling and Observational Data Analysis
+
+## A1. Survey and Sampling Methodology
+
+### A1.1 Overview
+
+This study utilizes data sourced from Open Data Toronto(@OpenDataToronto), focusing on shootings and firearm discharges recorded within city limits from 2004 to 2024. Given the observational nature of the dataset, this appendix explores the methodology behind data collection, focusing on how incidents are reported and recorded, ensuring reliability and comprehensiveness of the data utilized for this analysis.
+
+### A1.2 Data Collection Method
+
+The data collection method hinges on reports from multiple sources including police reports, hospital emergency data, and public reports. This multi-source approach helps in cross-validating the data to minimize reporting biases and errors inherent in single-source data collection. The Toronto Police Service ensures that each reported incident is followed up for additional details and context, which enhances the data’s accuracy.
+
+### A1.3 Sampling Method
+
+While the nature of the data is not based on sampling, the comprehensiveness of data collection over a long period allows for an observational study of trends over time and across different neighborhoods. This approach mimics a census of all shooting incidents within the specified timeframe and geographical bounds, providing a detailed picture of the public safety landscape across the city.
+
+## A2. Addressing Biases and Limitations
+
+### A2.1 Observational Bias
+
+Observational bias is addressed through the systematic recording of data points across all reported incidents, supplemented by stringent data verification protocols employed by the police. Data entries are standardized based on specific criteria such as incident severity, location, time, and involved parties, which are uniformly applied across all cases.
+
+### A2.2 Limitations of Observational Data
+
+While observational data provides extensive coverage, it inherently lacks the controlled setup of experimental designs, which can introduce external variability and confounding factors. This limitation is partly mitigated through advanced statistical methods such as multivariate regression models that account for potential confounders and interaction effects among variables.
+
+## A3. Advanced Analytical Techniques
+
+### A3.1 Model Specification
+
+To understand the impact of time and location on shooting severity, a Gradient Boosting Machine (GBM) model(@gbm) is employed. This section details the model’s specifications, including the handling of categorical and continuous variables, interaction terms, and the rationale behind choosing GBM over other potential models.
+
+### A3.2 Sensitivity Analysis
+
+A sensitivity analysis is conducted to test the robustness of the model’s findings against changes in model assumptions and configurations. This analysis helps in identifying the stability of the observed effects under various scenarios and model specifications.
+
+### A3.3 Simulation Studies
+
+Simulation studies complement the observational data analysis by testing theoretical scenarios and their probable outcomes. These simulations help in understanding potential trends in shooting incidents under different policy implementations or changes in socio-economic factors across neighborhoods.
 
 # References

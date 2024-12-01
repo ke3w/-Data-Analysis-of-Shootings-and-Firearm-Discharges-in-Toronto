@@ -58,7 +58,8 @@ ggplot(analysis_data, aes(x = neighbourhood_158, y = weighted_score, fill = neig
   geom_bar(stat = "identity") +
   labs(title = "Weighted Score by Neighbourhood", x = "Neighbourhood", y = "Weighted Score") +
   theme_minimal() +
-  theme(axis.text.x = element_blank())
+  theme(legend.position="none",
+        axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, size=5))
 
 # Plotting Weighted Score by Division
 ggplot(analysis_data, aes(x = division, y = weighted_score, fill = division)) +
