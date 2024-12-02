@@ -50,7 +50,7 @@ Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https:
 
 ## Data Cleaning
 
-Data cleaning was performed using R[@citeR] packages such as `tidyverse`[@tidyverse] and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions.
+Data cleaning was performed using R[@citeR] packages such as `tidyverse`[@tidyverse] and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions. The cleaning process was rigorously documented to ensure transparency and reproducibility, aligning with best practices outlined by Gebru et al. [@gebru2021datasheets].
 
 ## Variables
 
@@ -75,6 +75,8 @@ Data cleaning was performed using R[@citeR] packages such as `tidyverse`[@tidyve
 -   `division`: Police division where offence occurred
 
 ## Data visualization
+
+This part employed the ggplot2 package [@ggplot2] to create detailed and informative visualizations that effectively illustrate the data trends and insights from our analysis.
 
 ### Weighted Score Over Time
 
