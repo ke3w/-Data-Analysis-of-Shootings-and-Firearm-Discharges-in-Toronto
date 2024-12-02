@@ -4,12 +4,13 @@
 # Date: 2024/11/24
 # Contact: kerwin.wu@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: The `tidyverse`, `janitor`, `lubridate` packages must be installed and loaded
+# Pre-requisites: The `tidyverse`, `janitor`, `lubridate`, `arrow` packages must be installed and loaded
 
 #### Workspace setup ####
 library(tidyverse)
 library(janitor)
 library(lubridate)
+library(arrow)
 
 #### Clean data ####
 # Load the raw shootings data
@@ -30,3 +31,4 @@ cleaned_data <-
 
 #### Save data ####
 write_csv(cleaned_data, "data/02-analysis_data/analysis_data.csv")
+write_parquet(cleaned_data, "data/02-analysis_data/analysis_data.parquet")

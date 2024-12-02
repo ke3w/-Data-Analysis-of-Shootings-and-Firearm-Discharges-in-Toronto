@@ -222,15 +222,17 @@ The visualization provides a clear depiction of how incident severity is distrib
 
 ## Model Description
 
-The analysis employed a Gradient Boosting Machine (GBM) model[@gbm] using the `gbm` package in R, designed to predict the weighted scores of shootings and firearm discharges in Toronto based on multiple time-related and geographical predictors and using the `caret` package for advanced modeling techniques [@caret].
-
-The weighted score is a computed metric that assigns double weight to deaths compared to injuries, highlighting the gravity of incidents resulting in fatalities.
+The analysis employed a Gradient Boosting Machine (GBM) model(@gbm), utilizing the gbm package in R and caret package(@caret) to generate variable importance scores, which help in understanding which predictors are most influential in the model. This model type was selected for its robust performance with non-linear relationships and its ability to handle various types of data, which is crucial given the diverse nature of the dataset used. The GBM model excels in managing unbalanced data, such as the uneven distribution of shooting incidents across neighborhoods and times, and automatically handles interactions between variables, which is essential for our complex model.
 
 ## Model Setup
 
 ### Response and Predictor variables
 
-The response variable, weighted_score, combines the effects of deaths and injuries, assigning greater importance to the former. Predictors included:
+Response Variable:
+
+The response variable, `weighted_score`, is a composite metric combining the effects of deaths and injuries, assigning greater importance to fatalities(`weighted_score` = `death` \* 2 + `injuries`). This decision was driven by the data characteristics where the distribution of shootings varied significantly by time and location, necessitating a response variable that captures the severity of incidents rather than mere counts.
+
+Predictors included:
 
 -   `occ_date`: Numeric representation of the incident date.
 
@@ -244,17 +246,19 @@ The response variable, weighted_score, combines the effects of deaths and injuri
 
 -   `division`: Factor variable representing police divisions.
 
+Each predictor was chosen based on exploratory data analysis that indicated significant variations in shooting incidents associated with these variables. This choice ensures that the model can effectively learn and predict based on patterns specific to times, dates, and locations, which are critical in the dataset.
+
 ### Model Configuration
 
 The model was configured with the following parameters to control the complexity and fit of the model:
 
-• Number of Trees: 500, providing sufficient model complexity and accuracy.
+**• Number of Trees**: 500, providing sufficient model complexity and accuracy.
 
-• Interaction Depth: 4, allowing interactions among up to four predictors.
+**• Interaction Depth**: 4, allowing interactions among up to four predictors.
 
-• Shrinkage: 0.01, controlling the learning rate to avoid overfitting.
+**• Shrinkage**: 0.01, controlling the learning rate to avoid overfitting.
 
-• Cross-validation Folds: 5, used to validate the model internally and optimize parameter selection.
+**• Cross-validation Folds**: 5, used to validate the model internally and optimize parameter selection.
 
 ## Model Performance
 
@@ -280,6 +284,10 @@ summary(model, n.trees = 500, plotit = TRUE)
 ### Model Performance
 
 The model’s accuracy was assessed using the Root Mean Square Error (RMSE), calculated at 2.173830. This metric quantifies the average magnitude of the model’s prediction errors, providing a measure of predictive accuracy.
+
+### Linkage to Data Characteristics
+
+The model’s configuration, especially the choice and treatment of predictor variables, directly corresponds to the observed characteristics of the data. For example, the use of `occ_time_range` and `neighbourhood_158` as factors allows the model to capture the inherent categorical nature of these variables, while numeric transformation of `occ_date` lets the model utilize temporal trends over the years. This direct linkage ensures that the model is finely tuned to the specifics of the dataset, enhancing its predictive accuracy and relevance.
 
 ### Result Interpretation
 
