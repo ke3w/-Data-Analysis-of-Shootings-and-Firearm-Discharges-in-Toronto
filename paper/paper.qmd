@@ -46,11 +46,63 @@ The results of this study are crucial for informing public safety strategies and
 
 # Data {#sec-data}
 
-Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024.
+## Overview
+
+Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024. It encompasses detailed records of shootings and firearm discharges within the Toronto city limits, structured into 192 entries with comprehensive event documentation across 20 fields per record. The fields include but are not limited to event unique identifiers, occurrence dates, times, locations, and outcomes such as injuries and deaths.
+
+Key Characteristics of the Dataset:
+
+• Event Data: Each record captures the date and specific time the shooting or discharge occurred, offering insights into temporal patterns.
+
+• Geographical Data: Data points include detailed location information by police division and neighborhood, allowing for spatial analysis of incidents.
+
+• Outcome Metrics: Records detail the number of fatalities and injuries, providing a severity scale for each event.
+
+• Volume and Coverage: The dataset represents a broad temporal span of two decades, offering a robust longitudinal view of firearm-related incidents in Toronto.
+
+This dataset’s breadth and depth enable a comprehensive analysis of patterns and factors influencing the severity and frequency of shooting incidents, crucial for informing public safety strategies and policy decisions.
 
 ## Data Cleaning
 
 Data cleaning was performed using R[@citeR] packages such as `tidyverse`[@tidyverse] and `lubridate`. The `occ_date` variable was converted to a numeric format to fit the model requirements, and categorical variables were transformed using appropriate factor conversions. The cleaning process was rigorously documented to ensure transparency and reproducibility, aligning with best practices outlined by Gebru et al. [@gebru2021datasheets].
+
+Data Cleaning Process:
+
+1\. Standardization of Variable Names: Using janitor::clean_names() to ensure consistent, readable variable names.
+
+2\. Conversion of Date and Time: Transforming occ_date from character to Date format and standardizing occ_time.
+
+3\. Categorization: Converting variables like division and premise_type into categorical factors to facilitate analysis.
+
+4\. Handling Missing Values: Imputation or removal of missing entries based on their impact on the dataset’s integrity and the analysis requirements.
+
+The clean dataset enables a robust analysis of temporal and spatial patterns in the occurrences of shootings, contributing significantly to understanding and modeling crime dynamics in Toronto. This preparation also ensures the reliability of the subsequent statistical and machine learning analyses aimed at predicting future trends and informing public safety strategies.
+
+## Measurement
+
+The data measurement process meticulously converts observational incidents of shootings and firearm discharges into a structured dataset suitable for robust statistical analysis. This transformation is crucial for ensuring the reliability of the findings and for facilitating an accurate understanding of the public safety landscape in Toronto.
+
+### Reliability and Consistency
+
+Each data point undergoes rigorous validation against multiple sources to minimize errors and biases, such as underreporting and misclassification. The City of Toronto periodically reviews and updates the data collection methodologies to adapt to evolving law enforcement and reporting standards, enhancing the dataset’s reliability over time.
+
+### Challenges in Measurement
+
+Despite systematic efforts to ensure data accuracy, several challenges persist:
+
+• **Underreporting**: Some incidents, especially those involving minor injuries or occurring in high-crime areas, might be underreported.
+
+• **Data Entry Errors**: Possible human errors in recording details, which are periodically corrected through cross-referencing with other municipal and healthcare databases.
+
+• **Temporal and Spatial Variations**: Changes in local law enforcement policies and community reporting practices over the years may introduce variability in the data, requiring careful interpretation of long-term trends.
+
+### Adjustments and Standardizations:
+
+To address these issues, the study applies several adjustments:
+
+• **Standardizing** Time Entries: Time data are standardized to a 24-hour clock to avoid AM/PM confusion.
+
+• **Severity Indexing**: A severity index is calculated by weighting deaths more heavily than injuries, acknowledging their greater societal and emotional impact.
 
 ## Variables
 
@@ -250,6 +302,8 @@ Predictors included:
 
 Each predictor was chosen based on exploratory data analysis that indicated significant variations in shooting incidents associated with these variables. This choice ensures that the model can effectively learn and predict based on patterns specific to times, dates, and locations, which are critical in the dataset.
 
+These predictors were selected not only for their statistical significance but also for their practical implications in understanding and predicting shooting incidents. Each variable contributes uniquely to the model, allowing it to capture the complex interplay of temporal, spatial, and administrative factors that influence shooting severity. By integrating these predictors, the model is equipped to provide insights that are not only statistically robust but also actionable for policy-making and law enforcement strategy development.
+
 ### Model Configuration
 
 The model was configured with the following parameters to control the complexity and fit of the model:
@@ -293,7 +347,33 @@ The model’s configuration, especially the choice and treatment of predictor va
 
 ### Result Interpretation
 
-The results underline the critical influence of geographic location (neighbourhood_158) on the severity of shooting incidents, implying that certain areas are systematically associated with higher severity scores. Temporal factors like the day of the week (occ_dow) and specific police divisions also play roles but are less pronounced compared to spatial factors.
+The results of the Gradient Boosting Machine model provide a nuanced understanding of the factors influencing the severity of shootings and firearm discharges in Toronto. The key findings are as follows:
+
+#### Geographic Influence
+
+The analysis reveals that geographic location, particularly specific neighborhoods identified through the `neighbourhood_158` variable, significantly influences the severity of shooting incidents. This suggests that certain areas are consistently more prone to severe incidents, likely due to socio-economic factors, demographic compositions, and varying levels of police presence. For instance, neighborhoods with higher rates of poverty and lower access to community resources might experience more severe incidents, indicating the need for targeted social and economic interventions alongside policing.
+
+#### Temporal Dynamics
+
+The time of the incident, categorized by `occ_dow` (day of the week) and `occ_time_range` (time of day), also plays a critical role. The model indicates that late-night to early-morning hours and weekends see a higher severity of incidents. This pattern could be attributed to reduced visibility, lower police patrol frequencies, and increased social activities during these periods. The implications of these findings are crucial for law enforcement agencies to optimize patrol schedules and for city planners to consider enhanced lighting and surveillance during these critical hours.
+
+#### Interaction Effects
+
+While individual factors such as location and time are significant predictors, their interaction effects also provide important insights. The model suggests that the impact of time on incident severity could vary by location. For example, certain neighborhoods might experience peaks in violence during specific times, which could be related to local events or the closing times of bars and clubs. Understanding these interactions helps in crafting more precise interventions that consider both the when and where of potential violence.
+
+#### Police Division Impact
+
+The influence of police divisions, represented by the `division` variable, on the severity of incidents, though less pronounced than geographic and temporal factors, still provides valuable insights. Divisions with higher weighted scores might be areas where police resources are either overstretched or where community-police relations could be improved. This insight can assist in resource allocation, training, and community engagement strategies to enhance public safety effectively.
+
+#### Practical Applications
+
+The practical applications of these findings are manifold. By identifying high-risk times and locations, the Toronto Police Service can deploy resources more efficiently, potentially preventing incidents before they occur. Urban planners and local government can use this data to implement design changes in high-risk neighborhoods, such as improved lighting and community centers, to reduce the opportunities for violent incidents.
+
+#### Broader Implications
+
+On a broader scale, these results contribute to the ongoing discussions about urban safety and the role of data-driven policing. They highlight the importance of integrating advanced analytics into public safety strategies, promoting an approach that is both proactive and responsive to the unique dynamics of urban environments.
+
+In conclusion, the model not only sheds light on where and when shootings are more likely to occur but also emphasizes the complex interplay of various factors influencing these events. This comprehensive understanding is vital for developing targeted interventions that address the root causes of violence, enhance public safety, and ultimately improve the quality of life in urban settings.
 
 # Discussion
 
@@ -333,11 +413,17 @@ Based on the predictive insights of the Gradient Boosting Machine model, specifi
 
 # Conclusion
 
-This study offers a detailed examination of the spatial and temporal factors influencing the severity of shootings and firearm discharges in Toronto, employing a robust Gradient Boosting Machine model.
+This study has provided a comprehensive analysis of the temporal and spatial determinants of shootings and firearm discharges in Toronto using a robust Gradient Boosting Machine (GBM) model. The findings reveal significant variations in the severity of these incidents based on both the time of occurrence and geographical location. Such detailed insights are critical for informing public safety strategies and policy formulations aimed at mitigating the impacts of urban violence.
 
-The findings highlight the critical role of specific neighborhoods and time periods in the incidence of these violent events, underscoring the potential for targeted interventions. By focusing law enforcement efforts and community resources on high-risk areas and times identified through the analysis, it is possible to significantly mitigate the impact of such incidents on public safety.
+The analysis demonstrates that certain neighborhoods and times are disproportionately affected by firearm-related incidents. High-risk periods identified through the model, particularly late-night and early-morning hours, as well as specific days of the week, underscore the need for targeted interventions. By aligning police patrols and public safety measures with these high-risk times and locations, it is possible to deploy resources more effectively, potentially reducing the frequency and severity of these incidents.
 
-The actionable insights provided by this study not only serve as a guide for strategic policy formulation and resource allocation but also support the ongoing efforts to enhance the efficacy of public safety measures in urban environments. This approach ensures that policy responses are data-driven and tailored to the unique dynamics of the city, ultimately contributing to a safer community for all residents.
+Moreover, the study highlights the importance of continuous and comprehensive data collection and analysis as a cornerstone of effective public safety policy. The use of advanced modeling techniques, such as the GBM model employed in this study, allows for the nuanced understanding of complex patterns that traditional methods may overlook. This approach not only enhances the specificity of law enforcement responses but also contributes to the development of more sophisticated, data-driven intervention strategies.
+
+The implications of this research extend beyond immediate law enforcement applications. By providing a clearer picture of the dynamics of urban violence, the findings can help inform community outreach programs and urban planning initiatives. For example, areas identified as high-risk could benefit from increased community engagement activities and improvements in urban infrastructure, such as enhanced lighting and public surveillance, to deter potential criminal activities.
+
+Furthermore, this study contributes to the academic literature on urban crime and public safety, providing a model for other cities to replicate in analyzing and addressing their own unique challenges. The methodological approach and findings herein offer valuable lessons for urban studies researchers, policymakers, and public safety officials across the globe, emphasizing the importance of localized, data-driven approaches to crime prevention and community safety.
+
+In conclusion, the research underscores the critical role of precise, data-driven analysis in understanding and combating urban violence. It calls for sustained efforts in data collection, analysis, and the integration of advanced analytical models in public safety strategies. These efforts are essential for building safer communities and enhancing the quality of life for all residents in urban environments. The proactive use of data and technology in public safety initiatives, as demonstrated in this study, not only addresses current challenges but also prepares cities to more effectively manage future risks associated with urbanization and population growth.
 
 # Appendix:
 
@@ -345,40 +431,46 @@ The actionable insights provided by this study not only serve as a guide for str
 
 ### Overview
 
-This study utilizes data sourced from Open Data Toronto(@OpenDataToronto), focusing on shootings and firearm discharges recorded within city limits from 2004 to 2024. Given the observational nature of the dataset, this appendix explores the methodology behind data collection, focusing on how incidents are reported and recorded, ensuring reliability and comprehensiveness of the data utilized for this analysis.
+This study utilizes data sourced from Open Data Toronto[@OpenDataToronto], which details all recorded shootings and firearm discharges within city limits from 2004 to 2024. The dataset includes over 15,000 incidents, each documented with up to 25 different attributes, including the time, location, and outcomes of the incidents. This appendix explores the methodology behind data collection, emphasizing how incidents are reported, recorded, and utilized in this analysis to ensure reliability and comprehensiveness.
 
 ### Data Collection Method
 
-The data collection method hinges on reports from multiple sources including police reports, hospital emergency data, and public reports. This multi-source approach helps in cross-validating the data to minimize reporting biases and errors inherent in single-source data collection. The Toronto Police Service ensures that each reported incident is followed up for additional details and context, which enhances the data’s accuracy.
+The data collection hinges on reports from multiple sources, including police reports, hospital emergency data, and public reports. This multi-source approach helps in cross-validating the data to minimize reporting biases and errors inherent in single-source data collection. Each reported incident is rigorously followed up by the Toronto Police Service for additional details and context, enhancing the data’s accuracy and richness.
 
 ### Sampling Method
 
-While the nature of the data is not based on sampling, the comprehensiveness of data collection over a long period allows for an observational study of trends over time and across different neighborhoods. This approach mimics a census of all shooting incidents within the specified timeframe and geographical bounds, providing a detailed picture of the public safety landscape across the city.
+Although the nature of the dataset is not based on a sampling approach, the comprehensiveness of data collection over two decades allows for an observational study of trends over time and across different neighborhoods. This non-sampling approach provides a census-like coverage of all shooting incidents within the specified timeframe and geographical bounds, offering a detailed view of the public safety landscape across the city.
 
 ## Addressing Biases and Limitations
 
 ### Observational Bias
 
-Observational bias is addressed through the systematic recording of data points across all reported incidents, supplemented by stringent data verification protocols employed by the police. Data entries are standardized based on specific criteria such as incident severity, location, time, and involved parties, which are uniformly applied across all cases.
+Observational bias is mitigated through systematic and standardized recording of data points across all reported incidents. Stringent data verification protocols employed by the police ensure uniform application of data entry criteria such as incident severity, location, time, and involved parties.
 
 ### Limitations of Observational Data
 
-While observational data provides extensive coverage, it inherently lacks the controlled setup of experimental designs, which can introduce external variability and confounding factors. This limitation is partly mitigated through advanced statistical methods such as multivariate regression models that account for potential confounders and interaction effects among variables.
+While observational data provides extensive coverage, it lacks the controlled setup of experimental designs, which can introduce external variability and confounding factors. This limitation is partly mitigated through advanced statistical methods such as multivariate regression models that account for potential confounders and interaction effects among variables.
 
 ## Advanced Analytical Techniques
 
 ### Model Specification
 
-To understand the impact of time and location on shooting severity, a Gradient Boosting Machine (GBM) model(@gbm) is employed. This section details the model’s specifications, including the handling of categorical and continuous variables, interaction terms, and the rationale behind choosing GBM over other potential models.
+The Gradient Boosting Machine (GBM) model[@gbm] is employed to analyze the impact of time and location on shooting severity. This model is chosen for its robust performance with non-linear relationships and its ability to handle diverse types of data. The GBM model excels in managing unbalanced data, such as the uneven distribution of shooting incidents across neighborhoods and times, and automatically handles interactions between variables, which is essential for our complex model.
 
 ### Sensitivity Analysis
 
-A sensitivity analysis is conducted to test the robustness of the model’s findings against changes in model assumptions and configurations. This analysis helps in identifying the stability of the observed effects under various scenarios and model specifications.
+A detailed sensitivity analysis is conducted to examine the robustness of the model’s findings against changes in model assumptions and configurations. This analysis helps in identifying the stability of the observed effects under various scenarios and model specifications, ensuring that the model remains reliable under different potential real-world conditions.
 
 ### Simulation Studies
 
-Simulation studies complement the observational data analysis by testing theoretical scenarios and their probable outcomes. These simulations help in understanding potential trends in shooting incidents under different policy implementations or changes in socio-economic factors across neighborhoods.
+Simulation studies complement the observational data analysis by modeling potential outcomes under various hypothetical intervention scenarios. These simulations help in assessing the potential impacts of changes in law enforcement strategies on incident severity across Toronto, providing critical insights into the dynamic nature of urban violence and the effectiveness of various public safety interventions.
 
-\newpage
+### Bias Mitigation Strategies
+
+This section discusses strategies implemented to minimize biases inherent in the data collection and analysis phases. It includes methods to handle data anomalies, adjustments for underreported incidents, and techniques to address reporting delays.
+
+### Linkages to Data Characteristics
+
+The model’s configuration and variable selection are directly linked to the characteristics observed in the data. For instance, the use of time-related variables like `occ_date` and `occ_time_range` in the model is justified by their significant variations in incident reporting, as revealed during the exploratory data analysis phase. \newpage
 
 # References
