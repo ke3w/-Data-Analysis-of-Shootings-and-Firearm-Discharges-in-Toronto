@@ -23,20 +23,19 @@ analysis_data$occ_time_range <- as.factor(analysis_data$occ_time_range)
 analysis_data$neighbourhood_158 <- as.factor(analysis_data$neighbourhood_158)
 analysis_data$division <- as.factor(analysis_data$division)
 analysis_data <- analysis_data %>%
-  mutate(weighted_score = death * 2 + injuries)  # Adjust the greater importance of 'death' over 'injuries'
-
+  mutate(weighted_score = death * 2 + injuries)
 
 #### Model diagnostics and performance analysis ####
 # Printing model summary
 print(model)
 
 # Set graphical parameters
-par(cex.axis = 0.4, las = 1)  # Adjust this value to change the size of the axis labels
+par(cex.axis = 0.4, las = 1)
 
 # Plot variable importance
 summary(model, n.trees = 500, plotit = TRUE)
 
-# Reset to default (optional, to avoid affecting other plots)
+# Reset to default
 par(cex.axis = 1)
 
 # Compare predictions with actual data and calculate performance metrics
