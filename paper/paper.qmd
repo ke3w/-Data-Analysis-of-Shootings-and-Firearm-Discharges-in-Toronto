@@ -48,7 +48,7 @@ The results of this study are crucial for informing public safety strategies and
 
 ## Overview
 
-Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https://open.toronto.ca/dataset/shootings-firearm-discharges/>, detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024. It encompasses detailed records of shootings and firearm discharges within the Toronto city limits, structured into 192 entries with comprehensive event documentation across 20 fields per record. The fields include but are not limited to event unique identifiers, occurrence dates, times, locations, and outcomes such as injuries and deaths.
+Data for this study is sourced from Open Data Toronto[@OpenDataToronto]: <https://open.toronto.ca/dataset/shootings-firearm-discharges/> by using the package opendatatoronto[@opendatatoronto], detailing all recorded shootings and firearm discharges within the city limits from 2004 to 2024. It encompasses detailed records of shootings and firearm discharges within the Toronto city limits, structured into 192 entries with comprehensive event documentation across 20 fields per record. The fields include but are not limited to event unique identifiers, occurrence dates, times, locations, and outcomes such as injuries and deaths.
 
 Key Characteristics of the Dataset:
 
